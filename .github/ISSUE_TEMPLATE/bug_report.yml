@@ -1,0 +1,41 @@
+name: Bug report
+description: Something isn't working in a SecondMouse repo
+labels: ["type:bug", "status:triage"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for the report — please fill in the details below.
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: Tag, release, or commit SHA
+    validations:
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you expected vs. what actually occurred.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: false
+  - type: dropdown
+    id: cluster
+    attributes:
+      label: Cluster
+      options:
+        - kernel
+        - cad-intelligence
+        - coreml
+        - cam
+        - unfold
+        - product
+        - unsure
+    validations:
+      required: false

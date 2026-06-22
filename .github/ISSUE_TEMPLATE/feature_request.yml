@@ -1,0 +1,30 @@
+name: Feature request
+description: Propose a change or new capability
+labels: ["type:feature", "status:triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: false
+  - type: dropdown
+    id: cluster
+    attributes:
+      label: Cluster
+      options:
+        - kernel
+        - cad-intelligence
+        - coreml
+        - cam
+        - unfold
+        - product
+        - unsure
+    validations:
+      required: false
