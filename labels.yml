@@ -20,6 +20,9 @@
 - name: "cluster:product"
   color: "1d76db"
   description: "Shippable apps (e.g. OCCTStudio)"
+- name: "cluster:infra"
+  color: "1d76db"
+  description: "Ecosystem tooling / knowledge-catalog platform"
 
 # --- type ---
 - name: "type:bug"

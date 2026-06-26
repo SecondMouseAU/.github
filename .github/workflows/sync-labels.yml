@@ -1,0 +1,54 @@
+name: Sync labels
+
+# Applies the canonical labels.yml taxonomy to every repo in the org.
+# GITHUB_TOKEN can't write to other repos, so this needs an org-wide token with
+# Issues:write + Metadata:read as the secret LABEL_SYNC_TOKEN. Until it exists
+# the job no-ops with a warning.
+
+on:
+  schedule:
+    - cron: "0 4 * * 1"          # Mondays 04:00 UTC
+  workflow_dispatch:
+    inputs:
+      prune:
+        description: "Delete labels not in labels.yml"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths: [labels.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-labels
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      HAS_TOKEN: ${{ secrets.LABEL_SYNC_TOKEN != '' }}
+    steps:
+      - name: Require label-sync token
+        if: env.HAS_TOKEN != 'true'
+        run: echo "::warning::LABEL_SYNC_TOKEN not set — skipping label sync. Add an org-wide PAT (Issues:write + Metadata:read)."
+
+      - uses: actions/checkout@v4
+        if: env.HAS_TOKEN == 'true'
+
+      - uses: actions/setup-python@v5
+        if: env.HAS_TOKEN == 'true'
+        with:
+          python-version: "3.12"
+
+      - if: env.HAS_TOKEN == 'true'
+        run: pip install --quiet pyyaml
+
+      - name: Sync
+        if: env.HAS_TOKEN == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.LABEL_SYNC_TOKEN }}
+          PRUNE: ${{ inputs.prune && '1' || '' }}
+        run: python3 scripts/sync-labels.py
